@@ -1,0 +1,15 @@
+---
+etherchannel_id: 1
+etherchannel_members:
+  - GigabitEthernet1/0/22
+  - GigabitEthernet1/0/23
+etherchannel_allowed_vlans: "20,99"
+etherchannel_native_vlan: 1
+management_ip: 192.168.21.5
+management_mask: 255.255.255.0
+management_gateway: 192.168.21.1
+trunk_ports:
+  - {interface: GigabitEthernet1/0/24, description: STUD2-SW2 Fa0/24}
+client_ports:
+  - {interface: GigabitEthernet1/0/1, vlan: 20, description: STUD2 klient VLAN20}
+  - {interface: GigabitEthernet1/0/2, vlan: 99, description: STUD1 klient VLAN99 paa groenn switch}

@@ -1,0 +1,61 @@
+---
+- name: Behold administrasjon paa den oeverste switchen
+  hosts: STUD2-SW1
+  gather_facts: false
+  tasks:
+    - name: Sett oeverste porter til administrasjons-VLAN
+      cisco.ios.ios_config:
+        parents:
+          - "interface {{ item.interface }}"
+        lines:
+          - "description {{ item.description }}"
+          - switchport mode access
+          - "switchport access vlan {{ native_management_vlan }}"
+          - no shutdown
+      loop: "{{ management_ports }}"
+
+    - name: Lagre endringer
+      cisco.ios.ios_config:
+        save_when: modified
+
+- name: Opprett VLAN og trunker paa de nederste switchene
+  hosts: lower_switches
+  serial: 1
+  gather_facts: false
+  tasks:
+    - name: Opprett klient-VLAN
+      cisco.ios.ios_config:
+        parents:
+          - "vlan {{ item.id }}"
+        lines:
+          - "name {{ item.name }}"
+      loop: "{{ client_vlans }}"
+
+    - name: Sett interne forbindelser til trunk med administrasjons-VLAN
+      cisco.ios.ios_config:
+        parents:
+          - "interface {{ item.interface }}"
+        lines:
+          - "description {{ item.description }}"
+          - switchport mode trunk
+          - "switchport trunk native vlan {{ native_management_vlan }}"
+          - "switchport trunk allowed vlan {{ lower_trunk_allowed_vlans }}"
+          - no shutdown
+      loop: "{{ trunk_ports }}"
+
+    - name: Sett klientporter til riktig VLAN
+      cisco.ios.ios_config:
+        parents:
+          - "interface {{ item.interface }}"
+        lines:
+          - "description {{ item.description }}"
+          - switchport mode access
+          - "switchport access vlan {{ item.vlan }}"
+          - spanning-tree portfast
+          - spanning-tree bpduguard enable
+          - no shutdown
+      loop: "{{ client_ports }}"
+
+    - name: Lagre endringer
+      cisco.ios.ios_config:
+        save_when: modified

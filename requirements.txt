@@ -1,0 +1,4 @@
+ansible-core==2.21.5
+# Paramiko 5 fjernet SHA-1 KEX som eldre IOS i labben krever.
+paramiko==4.0.0
+PyYAML==6.0.3

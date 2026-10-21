@@ -1,0 +1,34 @@
+all:
+  children:
+    cisco:
+      vars:
+        ansible_connection: ansible.netcommon.network_cli
+        ansible_network_os: cisco.ios.ios
+        ansible_network_cli_ssh_type: paramiko
+        ansible_user: admin
+        ansible_connect_timeout: 30
+        ansible_command_timeout: 60
+      hosts:
+        STUD2-R1:
+          ansible_host: 192.168.20.1
+        STUD2-SW1:
+          ansible_host: 192.168.20.2
+        STUD2-R2:
+          ansible_host: 192.168.20.3
+        STUD2-SW2:
+          ansible_host: 192.168.21.4
+        STUD2-SW3:
+          ansible_host: 192.168.21.5
+    routers:
+      hosts:
+        STUD2-R1:
+        STUD2-R2:
+    switches:
+      hosts:
+        STUD2-SW1:
+        STUD2-SW2:
+        STUD2-SW3:
+    lower_switches:
+      hosts:
+        STUD2-SW2:
+        STUD2-SW3:

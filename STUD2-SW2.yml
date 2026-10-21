@@ -1,0 +1,9 @@
+---
+management_ip: 192.168.21.4
+management_mask: 255.255.255.0
+management_gateway: 192.168.21.1
+trunk_ports:
+  - {interface: FastEthernet0/1, description: STUD2-R1 Gi0/1}
+  - {interface: FastEthernet0/2, description: STUD2-R2 Gi0/0/1}
+  - {interface: FastEthernet0/24, description: STUD2-SW3 Gi1/0/24}
+client_ports: []

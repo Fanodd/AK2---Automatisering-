@@ -1,0 +1,13 @@
+---
+- name: Konfigurer taggede klient-VLAN paa begge rutere
+  hosts: routers
+  serial: 1
+  gather_facts: false
+  tasks:
+    - name: Konfigurer subinterface fra felles adresseplan
+      cisco.ios.ios_config:
+        content: "{{ lookup('ansible.builtin.template', playbook_dir + '/../templates/router_vlans.j2') }}"
+
+    - name: Lagre endringer
+      cisco.ios.ios_config:
+        save_when: modified

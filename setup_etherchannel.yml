@@ -1,0 +1,51 @@
+---
+- name: Sett opp LACP til STUD1 fra den nederste switchen
+  hosts: STUD2-SW3
+  gather_facts: false
+  tasks:
+    - name: Opprett klient-VLAN som skal deles mellom sidene
+      cisco.ios.ios_config:
+        parents:
+          - "vlan {{ item.id }}"
+        lines:
+          - "name {{ item.name }}"
+      loop: "{{ client_vlans }}"
+
+    - name: Konfigurer det logiske Port-channel-interfacet
+      cisco.ios.ios_config:
+        parents:
+          - "interface Port-channel{{ etherchannel_id }}"
+        lines:
+          - description LACP trunk til STUD1
+          - switchport mode trunk
+          - "switchport trunk native vlan {{ etherchannel_native_vlan }}"
+          - "switchport trunk allowed vlan {{ etherchannel_allowed_vlans }}"
+          - no shutdown
+
+    - name: Konfigurer begge fysiske porter som LACP-medlemmer
+      cisco.ios.ios_config:
+        parents:
+          - "interface {{ item }}"
+        lines:
+          - description LACP medlem til STUD1
+          - switchport mode trunk
+          - "switchport trunk native vlan {{ etherchannel_native_vlan }}"
+          - "switchport trunk allowed vlan {{ etherchannel_allowed_vlans }}"
+          - "channel-group {{ etherchannel_id }} mode active"
+          - no shutdown
+      loop: "{{ etherchannel_members }}"
+
+    - name: Lagre endringer
+      cisco.ios.ios_config:
+        save_when: modified
+
+    - name: Les EtherChannel-status
+      cisco.ios.ios_command:
+        commands:
+          - show etherchannel summary
+          - show interfaces trunk
+      register: channel_status
+
+    - name: Vis EtherChannel-status
+      ansible.builtin.debug:
+        var: channel_status.stdout_lines

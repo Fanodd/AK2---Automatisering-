@@ -1,0 +1,14 @@
+---
+- name: Kontroller adresseplan lokalt uten tilkobling til Cisco
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Valider adresseplan og DHCP-intervaller
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_playbook_python }}"
+          - "{{ playbook_dir }}/../../tools/validate_plan.py"
+      changed_when: false
+      check_mode: false
+

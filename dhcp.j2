@@ -1,0 +1,14 @@
+service dhcp
+{% for excluded in dhcp_exclusions %}
+ip dhcp excluded-address {{ excluded.start }} {{ excluded.end }}
+{% endfor %}
+{% for vlan in client_vlans %}
+ip dhcp pool {{ inventory_hostname | replace('-', '_') }}_VLAN{{ vlan.id }}
+ network {{ vlan.network }} {{ vlan.mask }}
+ default-router {{ vlan.gateway }}
+ domain-name {{ lab_domain }}
+{% if dhcp_dns_servers | length > 0 %}
+ dns-server {{ dhcp_dns_servers | join(' ') }}
+{% endif %}
+ lease {{ dhcp_lease_days }}
+{% endfor %}

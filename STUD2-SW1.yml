@@ -1,0 +1,8 @@
+---
+management_ip: 192.168.20.2
+management_mask: 255.255.255.0
+management_gateway: 192.168.20.1
+management_ports:
+  - {interface: GigabitEthernet1/0/1, description: Lab PC}
+  - {interface: GigabitEthernet1/0/2, description: STUD2-R1 Gi0/0}
+  - {interface: GigabitEthernet1/0/3, description: STUD2-R2 Gi0/0/0}

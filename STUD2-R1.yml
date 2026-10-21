@@ -1,0 +1,11 @@
+---
+lower_management_interface: GigabitEthernet0/1
+lower_management_ip: 192.168.21.1
+lower_management_mask: 255.255.255.0
+upper_management_interface: GigabitEthernet0/0
+upper_management_ip: 192.168.20.1
+dhcp_exclusions:
+  - {start: 172.16.20.1, end: 172.16.20.49}
+  - {start: 172.16.20.150, end: 172.16.20.254}
+  - {start: 192.168.99.1, end: 192.168.99.49}
+  - {start: 192.168.99.150, end: 192.168.99.254}

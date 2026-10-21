@@ -1,0 +1,16 @@
+---
+- name: Kontroller administrasjonstilgang til Cisco-enhetene
+  hosts: cisco
+  gather_facts: false
+  tasks:
+    - name: Les hostname, versjon og interface-status
+      cisco.ios.ios_command:
+        commands:
+          - show running-config | include ^hostname
+          - show version
+          - show ip interface brief
+      register: device_status
+
+    - name: Vis resultatet fra enheten
+      ansible.builtin.debug:
+        var: device_status.stdout_lines

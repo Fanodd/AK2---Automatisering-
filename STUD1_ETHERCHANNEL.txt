@@ -1,0 +1,37 @@
+Eksempelkonfigurasjon for den logiske rosa sidens nederste Catalyst 1000.
+Forutsetter at Gi1/0/22 og Gi1/0/23 samt Port-channel1 er ledige.
+Koble kablene etter at begge sider er konfigurert.
+
+configure terminal
+vlan 20
+ name STUD2_CLIENTS
+exit
+vlan 99
+ name STUD1_CLIENTS
+exit
+interface Port-channel1
+ description LACP trunk til STUD2
+ switchport mode trunk
+ switchport trunk native vlan 1
+ switchport trunk allowed vlan 20,99
+ no shutdown
+exit
+interface range GigabitEthernet1/0/22 - 23
+ description LACP medlem til STUD2
+ switchport mode trunk
+ switchport trunk native vlan 1
+ switchport trunk allowed vlan 20,99
+ channel-group 1 mode active
+ no shutdown
+end
+write memory
+show etherchannel summary
+show interfaces trunk
+
+Kabling: grønn Gi1/0/22 til rosa Gi1/0/22,
+        grønn Gi1/0/23 til rosa Gi1/0/23.
+Gi1/0/24 beholdes som uplink til hver sides 2960.
+VLAN 1 er native, men er utelatt fra allowed-listen; bare 20 og 99 deles.
+Begge sider må ha lik allowed-liste og native VLAN.
+Etter kabling skal Port-channel1 vise SU og begge medlemsporter P.
+Klientporter, øvrige trunker, ruting og DHCP konfigureres separat.

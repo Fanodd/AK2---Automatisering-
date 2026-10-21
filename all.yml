@@ -1,0 +1,43 @@
+---
+# Adresseplanen er samlet her. Passord oppgis ved kjøring, ikke i repoet.
+lab_domain: lab.local
+native_management_vlan: 1
+lower_trunk_allowed_vlans: "1,20,99"
+upper_management_network: 192.168.20.0
+upper_management_mask: 255.255.255.0
+lower_management_network: 192.168.21.0
+lower_management_mask: 255.255.255.0
+lower_management_gateway: 192.168.21.1
+
+# Premiss for oppgaven: rosa side eier 192.168.99.1, vaare rutere bruker
+# .252/.253, og DHCP for begge klient-VLAN leveres bare fra groenn side.
+
+client_vlans:
+  - id: 20
+    name: STUD2_CLIENTS
+    network: 172.16.20.0
+    prefix: 24
+    mask: 255.255.255.0
+    gateway: 172.16.20.1
+    router_addresses:
+      STUD2-R1: 172.16.20.1
+      STUD2-R2: 172.16.20.2
+    dhcp_ranges:
+      STUD2-R1: {start: 172.16.20.50, end: 172.16.20.149}
+      STUD2-R2: {start: 172.16.20.150, end: 172.16.20.239}
+  - id: 99
+    name: STUD1_CLIENTS
+    network: 192.168.99.0
+    prefix: 24
+    mask: 255.255.255.0
+    gateway: 192.168.99.1
+    router_addresses:
+      STUD2-R1: 192.168.99.252
+      STUD2-R2: 192.168.99.253
+    dhcp_ranges:
+      STUD2-R1: {start: 192.168.99.50, end: 192.168.99.149}
+      STUD2-R2: {start: 192.168.99.150, end: 192.168.99.239}
+
+# DNS er valgfritt. Ingen internett- eller DNS-tjeneste er opprettet i labben.
+dhcp_dns_servers: []
+dhcp_lease_days: 1

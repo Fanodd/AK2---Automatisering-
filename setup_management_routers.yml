@@ -1,0 +1,34 @@
+---
+- name: Sett opp ruterforbindelser til administrasjonsnettet under ruterne
+  hosts: STUD2-R1:STUD2-R2
+  gather_facts: false
+  tasks:
+    - name: Kontroller at adresse og interface er oppgitt
+      ansible.builtin.assert:
+        that:
+          - lower_management_interface is defined
+          - lower_management_ip is defined
+          - lower_management_mask is defined
+
+    - name: Konfigurer det nederste interfacet
+      cisco.ios.ios_config:
+        parents:
+          - "interface {{ lower_management_interface }}"
+        lines:
+          - "description Administrasjonsnett mot STUD2-SW2"
+          - "ip address {{ lower_management_ip }} {{ lower_management_mask }}"
+          - no shutdown
+
+    - name: Lagre konfigurasjonen hvis den er endret fra startup-config
+      cisco.ios.ios_config:
+        save_when: modified
+
+    - name: Les interface-status
+      cisco.ios.ios_command:
+        commands:
+          - show ip interface brief
+      register: interface_status
+
+    - name: Vis interface-status
+      ansible.builtin.debug:
+        var: interface_status.stdout_lines

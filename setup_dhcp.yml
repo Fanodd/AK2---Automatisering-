@@ -1,0 +1,13 @@
+---
+- name: Konfigurer adskilte DHCP-intervaller paa begge rutere
+  hosts: routers
+  serial: 1
+  gather_facts: false
+  tasks:
+    - name: Konfigurer DHCP-pooler og ekskluderte adresser
+      cisco.ios.ios_config:
+        content: "{{ lookup('ansible.builtin.template', playbook_dir + '/../templates/dhcp.j2') }}"
+
+    - name: Lagre endringer
+      cisco.ios.ios_config:
+        save_when: modified

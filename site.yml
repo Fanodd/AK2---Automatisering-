@@ -1,0 +1,8 @@
+---
+- import_playbook: validate_plan.yml
+- import_playbook: setup_management_routers.yml
+- import_playbook: setup_vlans_trunks.yml
+- import_playbook: setup_router_vlans.yml
+- import_playbook: setup_etherchannel.yml
+- import_playbook: setup_dhcp.yml
+- import_playbook: check_connection.yml

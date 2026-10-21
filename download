@@ -1,0 +1,10 @@
+.venv/
+.venv-win/
+.validation-libs/
+__pycache__/
+*.pyc
+.env
+*.log
+backup/
+rendered/
+*.retry

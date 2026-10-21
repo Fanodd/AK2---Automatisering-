@@ -1,0 +1,46 @@
+---
+- name: Les VLAN og trunker
+  hosts: switches
+  gather_facts: false
+  tasks:
+    - name: Hent switchstatus
+      cisco.ios.ios_command:
+        commands:
+          - show vlan brief
+          - show interfaces trunk
+          - show ip interface brief
+      register: switch_status
+    - name: Vis switchstatus
+      ansible.builtin.debug:
+        var: switch_status.stdout_lines
+
+- name: Les ruter- og DHCP-status
+  hosts: routers
+  gather_facts: false
+  tasks:
+    - name: Hent ruterstatus
+      cisco.ios.ios_command:
+        commands:
+          - show ip interface brief
+          - show ip route
+          - show ip dhcp pool
+          - show ip dhcp binding
+          - show ip dhcp conflict
+      register: router_status
+    - name: Vis ruterstatus
+      ansible.builtin.debug:
+        var: router_status.stdout_lines
+
+- name: Les EtherChannel-status
+  hosts: STUD2-SW3
+  gather_facts: false
+  tasks:
+    - name: Hent LACP-status
+      cisco.ios.ios_command:
+        commands:
+          - show etherchannel summary
+          - show lacp neighbor
+      register: lacp_status
+    - name: Vis LACP-status
+      ansible.builtin.debug:
+        var: lacp_status.stdout_lines

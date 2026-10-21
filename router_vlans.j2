@@ -1,0 +1,8 @@
+{# VLAN 1 er untagget administrasjon på det fysiske interfacet.
+   VLAN 20/99 er tagget på subinterface. Foreldreadressen beholdes. #}
+{% for vlan in client_vlans %}
+interface {{ lower_management_interface }}.{{ vlan.id }}
+ description {{ vlan.name }}
+ encapsulation dot1Q {{ vlan.id }}
+ ip address {{ vlan.router_addresses[inventory_hostname] }} {{ vlan.mask }}
+{% endfor %}
